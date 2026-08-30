@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Awnsy — Translate anything on your Mac</title>
+<meta name="description" content="A menu-bar translator for macOS. Select text or draw a box around anything on your screen and get an instant translation. Private on-device model, or bring your own key.">
+<link rel="canonical" href="https://awnsy.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Awnsy">
+<meta property="og:title" content="Awnsy — Translate anything on your Mac">
+<meta property="og:description" content="Select text or draw a box around anything on your screen and get an instant translation. Private on-device model, or bring your own key.">
+<meta property="og:url" content="https://awnsy.com/">
+<meta property="og:image" content="https://awnsy.com/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  /* Landing-only presentation: hero, demo scene, bento grid, closing CTA.
+     Everything shared (tokens, backdrop, nav, footer, reveal) lives in assets/site.css. */
+
+  /* ---------- hero ---------- */
+  .hero { text-align: center; padding: 64px 0 24px; }
+  .hero h1 {
+    font-size: clamp(38px, 6.4vw, 68px);
+    line-height: 1.06; letter-spacing: -0.03em; font-weight: 800;
+    text-wrap: balance;
+    margin: 0 auto 18px; max-width: 14em;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(92deg, var(--pink) 10%, var(--pink-deep) 55%, var(--violet) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .sub {
+    color: var(--muted); font-size: clamp(15px, 2vw, 18px);
+    max-width: 36em; margin: 0 auto 30px; text-wrap: balance;
+  }
+  .cta-row { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px; border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+    border: 1px solid var(--line);
+    color: var(--ink); font-size: 14.5px; font-weight: 600;
+    box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 10px 30px rgba(0,0,0,.35);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .pill .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pink-deep);
+    box-shadow: 0 0 0 0 rgba(233,77,176,.55);
+    animation: pulse 2.2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(233,77,176,.55) }
+    70% { box-shadow: 0 0 0 9px rgba(233,77,176,0) }
+    100% { box-shadow: 0 0 0 0 rgba(233,77,176,0) }
+  }
+  .pill small { color: var(--muted); font-weight: 500; }
+  .ghost {
+    color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
+    padding: 12px 18px; border-radius: 999px; transition: color .2s;
+  }
+  .ghost:hover { color: var(--ink); }
+
+  /* ---------- demo scene ---------- */
+  .scene {
+    position: relative;
+    margin: 58px auto 0;
+    max-width: 880px;
+    min-height: 380px;
+  }
+  /* source document — a real Quick Look screenshot of sakura.pdf; the selection marquee is
+     overlaid on its headline in percent coordinates so it scales with the shot */
+  .doc-shot {
+    position: relative;
+    margin-right: 26%;
+    transform: rotate(-1deg);
+    filter: drop-shadow(0 30px 70px rgba(0,0,0,.55));
+  }
+  .doc-shot img { display: block; width: 100%; height: auto; border-radius: 12px; }
+  /* selection marquee around the headline */
+  .marquee {
+    position: absolute; left: 35.5%; top: 22.5%; width: 30%; height: 16%;
+    border-radius: 10px;
+    border: 2px solid var(--pink-deep);
+    background: rgba(233,77,176,.07);
+    box-shadow: 0 0 0 4px rgba(233,77,176,.10);
+    animation: marquee-glow 3s ease-in-out infinite;
+  }
+  @keyframes marquee-glow {
+    0%,100% { box-shadow: 0 0 0 4px rgba(233,77,176,.10) }
+    50% { box-shadow: 0 0 22px 4px rgba(233,77,176,.22) }
+  }
+  .marquee i {
+    position: absolute; width: 12px; height: 12px; border-color: var(--pink-deep); border-style: solid;
+  }
+  .marquee i:nth-child(1) { left: -3px; top: -3px; border-width: 3px 0 0 3px; border-top-left-radius: 6px; }
+  .marquee i:nth-child(2) { right: -3px; top: -3px; border-width: 3px 3px 0 0; border-top-right-radius: 6px; }
+  .marquee i:nth-child(3) { left: -3px; bottom: -3px; border-width: 0 0 3px 3px; border-bottom-left-radius: 6px; }
+  .marquee i:nth-child(4) { right: -3px; bottom: -3px; border-width: 0 3px 3px 0; border-bottom-right-radius: 6px; }
+
+  /* translation popup — a real screenshot of the app's window (text erased), with the
+     translation typed over it. Sized with container units so the overlay scales with the shot. */
+  .popup-shot {
+    position: absolute; right: 0; top: 26%;
+    width: min(58%, 430px);
+    container-type: inline-size;
+    transform: rotate(.6deg);
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,.6)) drop-shadow(0 0 34px rgba(233,77,176,.14));
+  }
+  .popup-shot img { display: block; width: 100%; height: auto; }
+  .typed-overlay {
+    position: absolute; left: 5.5%; right: 5.5%; top: 27%;
+    color: #ddd; font-size: 3.55cqw; line-height: 1.42; letter-spacing: .01em;
+    text-align: left;
+  }
+  .caret {
+    display: inline-block; width: 2px; height: 1.05em; vertical-align: -0.14em;
+    background: var(--pink); margin-left: 2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0 } }
+
+  /* ---------- bento ---------- */
+  .section { padding: 96px 0 20px; }
+  .section h2 {
+    font-size: clamp(26px, 3.6vw, 36px); letter-spacing: -0.02em; font-weight: 800;
+    text-align: center; margin-bottom: 12px; text-wrap: balance;
+  }
+  .section .lead { text-align: center; color: var(--muted); max-width: 38em; margin: 0 auto 44px; }
+  .bento {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .card {
+    grid-column: span 2;
+    background: linear-gradient(180deg, var(--glass-strong), var(--glass));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 26px 24px;
+    position: relative; overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(255,122,196,.28); }
+  .card.wide { grid-column: span 4; }
+  .card h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 14px; max-width: 42em; }
+  .card .glyph {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 38px; height: 38px; border-radius: 11px; margin-bottom: 16px;
+    background: linear-gradient(150deg, rgba(255,122,196,.18), rgba(139,108,240,.14));
+    border: 1px solid rgba(255,122,196,.22);
+    font-size: 17px; color: var(--pink);
+  }
+  .card .glyph svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  /* keycaps */
+  .keys { display: flex; gap: 6px; margin-top: 16px; }
+  .key {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px; color: var(--ink);
+    background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    border: 1px solid var(--line); border-bottom-width: 2px;
+    border-radius: 8px; padding: 5px 10px;
+  }
+  .key.mut { opacity: .5; }
+  .models-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .chip {
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+    background: var(--glass);
+  }
+  .chip.hl { color: var(--pink); border-color: rgba(255,122,196,.3); }
+
+  /* ---------- closing cta ---------- */
+  .closing { text-align: center; padding: 110px 0 90px; }
+  .closing img { width: 92px; height: 92px; border-radius: 22px; margin-bottom: 24px;
+    box-shadow: 0 18px 50px rgba(233,77,176,.35); }
+  .closing h2 { font-size: clamp(26px, 4vw, 40px); letter-spacing: -0.02em; font-weight: 800; margin-bottom: 10px; }
+  .closing p { color: var(--muted); margin-bottom: 28px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee, .pill .dot, .caret { animation: none !important; }
+    .card:hover { transform: none; }
+  }
+
+  @media (max-width: 720px) {
+    .scene { min-height: 0; }
+    .doc-shot { margin-right: 0; transform: none; }
+    .popup-shot { position: relative; width: 100%; right: auto; top: auto; margin-top: -30px; transform: none; }
+    .card, .card.wide { grid-column: span 6; }
+  }
+</style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="noise"></div>
+
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="index.html"><img src="icon.png" alt="" width="30" height="30"><span>Awnsy</span></a>
+      <div class="nav-links">
+        <a href="support/index.html">Support</a>
+        <a href="privacy/index.html">Privacy</a>
+        <a href="terms/index.html">Terms</a>
+      </div>
+    </nav>
+
+    <main>
+    <header class="hero">
+      <h1 class="up d1">Translate <span class="grad">anything</span> on&nbsp;your&nbsp;screen.</h1>
+      <p class="sub up d2">A menu-bar translator for macOS. Select text — or draw a box around a photo, a PDF, a game, a subtitle — and get an instant translation. Even where you can’t select it.</p>
+      <div class="cta-row up d3">
+        <span class="pill"><span class="dot"></span>Coming soon&nbsp;<small>· Mac App Store</small></span>
+        <a class="ghost" href="mailto:aidsoid+awnsy@gmail.com">Get in touch →</a>
+      </div>
+
+      <div class="scene up d4" aria-hidden="true">
+        <div class="doc-shot">
+          <img src="assets/source.webp" alt="" width="1252" height="736" decoding="async">
+          <span class="marquee"><i></i><i></i><i></i><i></i></span>
+        </div>
+        <div class="popup-shot">
+          <img src="assets/popup.webp" alt="" width="740" height="290" decoding="async">
+          <div class="typed-overlay"><span id="typed"></span><span class="caret" id="caret"></span></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2>Small app. Serious reach.</h2>
+      <p class="lead">Everything a translator should do on a Mac — and a few things only Awnsy does.</p>
+      <div class="bento">
+        <div class="card wide">
+          <div class="glyph">⌘</div>
+          <h3>One keystroke. Any language.</h3>
+          <p>Double-⌘C or your own hotkey — that’s the whole interface. The translation streams in live, and you can switch language or model right in the window.</p>
+          <div class="keys"><span class="key">⌘C</span><span class="key">⌘C</span><span class="key mut">→</span><span class="key">translated</span></div>
+        </div>
+        <div class="card">
+          <div class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8.5 12h7"/></svg></div>
+          <h3>Reads the screen itself</h3>
+          <p>On-device text recognition pulls words out of images, videos and apps that won’t let you select.</p>
+        </div>
+        <div class="card">
+          <div class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v1.8"/></svg></div>
+          <h3>Private by default</h3>
+          <p>The built-in model runs entirely on your Mac. Offline. No account, no key, no telemetry.</p>
+        </div>
+        <div class="card">
+          <div class="glyph">✦</div>
+          <h3>Your models, your choice</h3>
+          <p>Bring your own OpenAI or Anthropic key for top quality. It stays in your Keychain.</p>
+          <div class="models-row"><span class="chip hl">On-device</span><span class="chip">GPT</span><span class="chip">Claude</span></div>
+        </div>
+        <div class="card">
+          <div class="glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5c-6.5 0-12 5.5-13 12L4 20"/><path d="M20.5 3.5c.5 6.5-5 12.5-12 12.9M13 8.5l2.5 2.5"/></svg></div>
+          <h3>Native and featherlight</h3>
+          <p>Pure Swift, not Electron. Lives in the menu bar, never clutters your Dock.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing">
+      <img src="icon.png" alt="Awnsy app icon" width="92" height="92">
+      <h2>Meet Awnsy.</h2>
+      <p>Launching soon on the Mac App Store.</p>
+      <div class="cta-row">
+        <span class="pill"><span class="dot"></span>Coming soon&nbsp;<small>· Mac App Store</small></span>
+      </div>
+    </section>
+    </main>
+
+    <footer>
+      <div class="foot-row">
+        <span>© 2025–2026 Alexey Doroshenko</span>
+        <span class="spacer"></span>
+        <a href="support/index.html">Support</a>
+        <a href="privacy/index.html">Privacy</a>
+        <a href="terms/index.html">Terms</a>
+        <a href="mailto:aidsoid+awnsy@gmail.com">Contact</a>
+      </div>
+      <p class="disclaimer">Awnsy is an independent app, not affiliated with or endorsed by OpenAI, Anthropic, or Google. All product names and trademarks are property of their respective owners.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Types the demo translation into the popup once on load. Skipped (text shown
+    // immediately) when the visitor prefers reduced motion.
+    (function () {
+      var text = "Cherry blossom season.";
+      var el = document.getElementById("typed");
+      var caret = document.getElementById("caret");
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        el.textContent = text; caret.remove(); return;
+      }
+      var i = 0;
+      setTimeout(function tick() {
+        el.textContent = text.slice(0, ++i);
+        if (i < text.length) setTimeout(tick, 34 + Math.random() * 46);
+        else setTimeout(function () { caret.style.display = "none"; }, 1800);
+      }, 900);
+    })();
+  </script>
+</body>
+</html>
