@@ -13,6 +13,20 @@
 <meta property="og:url" content="https://awnsy.com/">
 <meta property="og:image" content="https://awnsy.com/assets/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Awnsy",
+  "operatingSystem": "macOS 15 or later (Apple silicon)",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "A menu-bar translator for macOS. Select text or draw a box around anything on your screen and get an instant translation. Private on-device model, or bring your own key.",
+  "url": "https://awnsy.com/",
+  "image": "https://awnsy.com/assets/og.jpg",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Alexey Doroshenko" }
+}
+</script>
 <link rel="icon" href="icon.png">
 <link rel="stylesheet" href="assets/site.css">
 <style>
@@ -36,27 +50,19 @@
     max-width: 36em; margin: 0 auto 30px; text-wrap: balance;
   }
   .cta-row { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 10px;
-    padding: 12px 22px; border-radius: 999px;
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-    border: 1px solid var(--line);
-    color: var(--ink); font-size: 14.5px; font-weight: 600;
-    box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 10px 30px rgba(0,0,0,.35);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  /* Apple's official badge artwork (assets/mas-badge.svg) — per App Store marketing
+     guidelines it is used as-is, only sized; the glow is on the wrapper. */
+  .mas-badge {
+    display: inline-block; line-height: 0; border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    transition: transform .2s, box-shadow .2s;
   }
-  .pill .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--pink-deep);
-    box-shadow: 0 0 0 0 rgba(233,77,176,.55);
-    animation: pulse 2.2s ease-out infinite;
+  .mas-badge img { width: 186px; height: auto; display: block; }
+  .mas-badge:hover { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(233,77,176,.25); }
+  .cta-meta {
+    color: var(--muted); font-size: 13px; margin: 14px 0 0; letter-spacing: .01em;
   }
-  @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(233,77,176,.55) }
-    70% { box-shadow: 0 0 0 9px rgba(233,77,176,0) }
-    100% { box-shadow: 0 0 0 0 rgba(233,77,176,0) }
-  }
-  .pill small { color: var(--muted); font-weight: 500; }
+  .cta-meta span + span::before { content: "·"; margin: 0 8px; opacity: .5; }
   .ghost {
     color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600;
     padding: 12px 18px; border-radius: 999px; transition: color .2s;
@@ -174,14 +180,15 @@
 
   /* ---------- closing cta ---------- */
   .closing { text-align: center; padding: 110px 0 90px; }
-  .closing img { width: 92px; height: 92px; border-radius: 22px; margin-bottom: 24px;
+  /* Direct child only — the badge's <img> inside .mas-badge must not inherit the icon styling. */
+  .closing > img { width: 92px; height: 92px; border-radius: 22px; margin-bottom: 24px;
     box-shadow: 0 18px 50px rgba(233,77,176,.35); }
   .closing h2 { font-size: clamp(26px, 4vw, 40px); letter-spacing: -0.02em; font-weight: 800; margin-bottom: 10px; }
   .closing p { color: var(--muted); margin-bottom: 28px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .marquee, .pill .dot, .caret { animation: none !important; }
-    .card:hover { transform: none; }
+    .marquee, .caret { animation: none !important; }
+    .card:hover, .mas-badge:hover { transform: none; }
   }
 
   @media (max-width: 720px) {
@@ -211,9 +218,12 @@
       <h1 class="up d1">Translate <span class="grad">anything</span> on&nbsp;your&nbsp;screen.</h1>
       <p class="sub up d2">A menu-bar translator for macOS. Select text — or draw a box around a photo, a PDF, a game, a subtitle — and get an instant translation. Even where you can’t select it.</p>
       <div class="cta-row up d3">
-        <span class="pill"><span class="dot"></span>Coming soon&nbsp;<small>· Mac App Store</small></span>
-        <a class="ghost" href="mailto:aidsoid+awnsy@gmail.com">Get in touch →</a>
+        <!-- APP_STORE_URL: replace the id below with the app's Apple ID
+             (App Store Connect → App Information → Apple ID). Same link in the closing section. -->
+        <a class="mas-badge" href="https://apps.apple.com/app/id0000000000"><img src="assets/mas-badge.svg" alt="Download on the Mac App Store" width="156" height="40"></a>
+        <a class="ghost" href="support/index.html">Support &amp; FAQ →</a>
       </div>
+      <p class="cta-meta up d3"><span>Free to download</span><span>macOS 15 or later</span><span>Apple silicon</span></p>
 
       <div class="scene up d4" aria-hidden="true">
         <div class="doc-shot">
@@ -264,9 +274,9 @@
     <section class="closing">
       <img src="icon.png" alt="Awnsy app icon" width="92" height="92">
       <h2>Meet Awnsy.</h2>
-      <p>Launching soon on the Mac App Store.</p>
+      <p>Free on the Mac App Store. Awnsy Pro unlocks unlimited screen translation.</p>
       <div class="cta-row">
-        <span class="pill"><span class="dot"></span>Coming soon&nbsp;<small>· Mac App Store</small></span>
+        <a class="mas-badge" href="https://apps.apple.com/app/id0000000000"><img src="assets/mas-badge.svg" alt="Download on the Mac App Store" width="156" height="40"></a>
       </div>
     </section>
     </main>
