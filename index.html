@@ -59,6 +59,15 @@
   }
   .mas-badge img { width: 186px; height: auto; display: block; }
   .mas-badge:hover { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(233,77,176,.25); }
+  /* Product Hunt's own "featured" badge, sized to the App Store badge's height so the two read
+     as one row; same lift on hover. */
+  .ph-badge {
+    display: inline-block; line-height: 0; border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .ph-badge img { height: 48px; width: auto; display: block; }
+  .ph-badge:hover { transform: translateY(-1px); box-shadow: 0 14px 36px rgba(233,77,176,.25); }
   .cta-meta {
     color: var(--muted); font-size: 13px; margin: 14px 0 0; letter-spacing: .01em;
   }
@@ -188,7 +197,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .marquee, .caret { animation: none !important; }
-    .card:hover, .mas-badge:hover { transform: none; }
+    .card:hover, .mas-badge:hover, .ph-badge:hover { transform: none; }
   }
 
   @media (max-width: 720px) {
@@ -221,6 +230,7 @@
         <!-- APP_STORE_URL: replace the id below with the app's Apple ID
              (App Store Connect → App Information → Apple ID). Same link in the closing section. -->
         <a class="mas-badge" href="https://apps.apple.com/app/id6805945103"><img src="assets/mas-badge.svg" alt="Download on the Mac App Store" width="156" height="40"></a>
+        <a class="ph-badge" href="https://www.producthunt.com/products/awnsy?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-awnsy" target="_blank" rel="noopener noreferrer"><img alt="Awnsy - Offline AI translator for Mac. Press ⌘C twice, done. | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1253967&amp;theme=dark&amp;t=1789891845618"></a>
         <a class="ghost" href="support/index.html">Support &amp; FAQ →</a>
       </div>
       <p class="cta-meta up d3"><span>Free to download</span><span>macOS 15 or later</span><span>Apple silicon</span></p>
